@@ -1,0 +1,304 @@
+.detail-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding: 24px 20px 60px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+}
+
+.detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.85fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.detail-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.court-cover-img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #60a5fa, #a855f7);
+}
+
+.detail-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #0f172a;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.section-heading {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 20px 0 10px;
+  color: #0f172a;
+}
+
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.amenity-tag {
+  background-color: #f1f5f9;
+  color: #334155;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.price-table th,
+.price-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.price-table th {
+  text-align: left;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.price-table th:last-child,
+.price-table td:last-child {
+  text-align: right;
+}
+
+.price-highlight {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.review-stars {
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
+  color: #cbd5e1;
+  cursor: pointer;
+  margin: 8px 0 14px;
+}
+
+.review-stars span.active {
+  color: #f59e0b;
+}
+
+.review-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.sidebar-box {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.calendar-day-name {
+  color: #94a3b8;
+  font-weight: 600;
+  padding-bottom: 6px;
+}
+
+.calendar-day {
+  padding: 7px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #334155;
+}
+
+.calendar-day:hover {
+  background-color: #eff6ff;
+}
+
+.calendar-day.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.legend-row {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: #475569;
+  margin: 10px 0 14px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.dot-free {
+  background-color: #eff6ff;
+  border: 1px solid #93c5fd;
+}
+
+.dot-walkin {
+  background-color: #fef08a;
+  border: 1px solid #eab308;
+}
+
+.dot-fixed {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+}
+
+.hour-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.hour-btn {
+  padding: 10px 4px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #bfdbfe;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  position: relative;
+  transition: all 0.15s;
+}
+
+.hour-btn.booked {
+  background-color: #fef08a;
+  border-color: #facc15;
+  color: #854d0e;
+  cursor: not-allowed;
+}
+
+.hour-btn.selected {
+  background-color: #2563eb;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.time-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+.helper-text {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.btn-book-gradient {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+
+.btn-book-gradient:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .detail-container {
+    grid-template-columns: 1fr;
+  }
+}
