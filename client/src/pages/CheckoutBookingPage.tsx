@@ -280,7 +280,7 @@ export default function CheckoutBookingPage() {
               disabled={submitting}
               onClick={handleConfirmOrder}
             >
-              {submitting ? 'Đang xử lý...' : 'Xem lại đơn đặt sân'}
+              {submitting ? 'Đang xử lý...' : 'Xác nhận đơn đặt sân'}
             </button>
           </div>
         </div>

@@ -18,8 +18,7 @@ interface BookingItem {
 const COURT_LABELS: Record<string, { sport: string; name: string }> = {
   san_bong_A: { sport: 'Bóng đá mini', name: 'Sân 5 người số 1' },
   san_bong_B: { sport: 'Bóng đá mini', name: 'Sân 7 người số 2' },
-  san_cau_long_1: { sport: 'Cầu lông', name: 'Sân cầu lông số 1' },
-  san_pickleball_1: { sport: 'Pickleball', name: 'Sân pickleball số 3' },
+  san_pickleball: { sport: 'Pickleball', name: 'Sân pickleball số 3' },
 };
 
 export default function BookingHistoryPage() {
@@ -201,7 +200,7 @@ export default function BookingHistoryPage() {
         )}
 
         <p className="history-footnote">
-          Huỷ miễn phí trước giờ chơi 2 giờ. Sát giờ hơn, vui lòng gọi 028 0000 0000.
+          Huỷ miễn phí trước giờ chơi 2 giờ. Sát giờ hơn, vui lòng gọi 023 4444 999.
         </p>
 
         {pastOrCancelledBookings.length > 0 && (

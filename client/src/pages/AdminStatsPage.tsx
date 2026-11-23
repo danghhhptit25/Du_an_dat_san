@@ -16,8 +16,6 @@ interface BookingRecord {
 const SPORTS_LIST = [
   { key: 'Bóng đá mini', matchIds: ['san_bong_A', 'san_bong_B'] },
   { key: 'Pickleball', matchIds: ['san_pickleball_1'] },
-  { key: 'Tennis', matchIds: ['san_tennis_1'] },
-  { key: 'Cầu lông', matchIds: ['san_cau_long_1'] },
 ];
 
 export default function AdminStatsPage() {

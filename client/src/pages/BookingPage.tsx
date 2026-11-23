@@ -1,6 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { setCourtId, setDate, toggleSlot, clearCart } from '../store/bookingSlice';
+import { setCourtId, setDate, toggleSlot,} from '../store/bookingSlice';
 import  { type TimeSlot } from '../types/booking';
 import './CourtBooking.css';
 
@@ -34,9 +35,9 @@ const COURTS_DATA: CourtItem[] = [
     reviews: 12,
   },
   {
-    id: 'san_cau_long_1',
-    name: 'Sân Cầu Lông Tiêu Chuẩn 1',
-    sport: 'Cầu Lông',
+    id: 'san_pickleball',
+    name: 'Sân pickleball số 3',
+    sport: 'Pickleball',
     address: 'Quận Hà Đông, Hà Nội',
     pricePerHour: 100000,
     rating: 4.5,
@@ -46,6 +47,7 @@ const COURTS_DATA: CourtItem[] = [
 
 export default function BookingPage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { selectedCourtId, selectedDate, cartSlots } = useAppSelector(
     (state) => state.booking
   );
@@ -86,38 +88,36 @@ export default function BookingPage() {
     fetchSlots();
   }, [selectedCourtId, selectedDate]);
 
-  const handleConfirmBooking = async () => {
-    if (cartSlots.length === 0) return;
+  const handleConfirmBooking = () => {
+  if (cartSlots.length === 0) return;
 
-    const sorted = [...cartSlots].sort((a, b) => a.startTime.localeCompare(b.startTime));
-    const payload = {
-      customerId: 'user_01',
+  const sorted = [...cartSlots].sort((a, b) =>
+    a.startTime.localeCompare(b.startTime)
+  );
+
+  const courtMap: Record<string, { name: string; sport: string }> = {
+    san_bong_A: { name: 'Sân Bóng Đá Mini 5 Người', sport: 'Bóng đá mini' },
+    san_bong_B: { name: 'Sân Bóng Đá 7 Người', sport: 'Bóng đá mini' },
+    san_pickleball: { name: 'Sân Pickleball Số 3', sport: 'Pickleball' },
+  };
+
+  const info = courtMap[selectedCourtId] || {
+    name: selectedCourtId,
+    sport: 'Thể thao',
+  };
+
+  navigate('/checkout', {
+    state: {
       courtId: selectedCourtId,
+      courtName: info.name,
+      sport: info.sport,
+      dateLabel: selectedDate,
       date: selectedDate,
       startTime: sorted[0].startTime,
       endTime: sorted[sorted.length - 1].endTime,
-      totalPrice,
-    };
-
-    try {
-      const res = await fetch('http://localhost:5000/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const result = await res.json();
-
-      if (!res.ok) {
-        setMessage({ type: 'error', text: result.message || 'Đặt sân thất bại!' });
-        return;
-      }
-
-      setMessage({ type: 'success', text: result.message });
-      dispatch(clearCart());
-      fetchSlots();
-    } catch {
-      setMessage({ type: 'error', text: 'Lỗi mạng khi gửi đơn đặt sân!' });
-    }
+      courtPrice: totalPrice,
+      },
+    });
   };
 
   return (
@@ -145,7 +145,7 @@ export default function BookingPage() {
           >
             <option value="Tất cả">🏅 Tất cả môn</option>
             <option value="Bóng Đá">⚽ Bóng Đá</option>
-            <option value="Cầu Lông">🏸 Cầu Lông</option>
+            <option value="Pickleball">🏸 Pickleball</option>
           </select>
         </div>
 
