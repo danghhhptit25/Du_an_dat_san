@@ -1,16 +1,10 @@
-import express from 'express';
-import {
-  createBooking,
-  getAvailableSlots,
-  getBookingHistory,
-  getRevenueStats,
-} from '../controllers/bookingController.js';
+import { Router } from 'express';
+import bookingRoutes from './bookingRoutes.js';
+import statsRoutes from './statsRoutes.js';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/', createBooking);
-router.get('/available', getAvailableSlots);
-router.get('/history', getBookingHistory);
-router.get('/stats', getRevenueStats);
+router.use('/bookings', bookingRoutes);
+router.use('/stats', statsRoutes);
 
 export default router;

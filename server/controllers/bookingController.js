@@ -1,6 +1,6 @@
-import booking from '../models/booking.js';
+import Booking from '../models/Booking.js';
 
-export const createBooking = async (req, res) => {
+export const createBooking = async (req, res, next) => {
   try {
     const { customerId, courtId, date, startTime, endTime, totalPrice } = req.body;
 
@@ -12,7 +12,7 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ message: 'Giờ kết thúc phải lớn hơn giờ bắt đầu.' });
     }
 
-    const conflictBooking = await booking.findOne({
+    const conflict = await Booking.findOne({
       courtId,
       date,
       status: { $ne: 'Cancelled' },
@@ -20,28 +20,23 @@ export const createBooking = async (req, res) => {
       endTime: { $gt: startTime },
     });
 
-    if (conflictBooking) {
+    if (conflict) {
       return res.status(409).json({
-        message: `Khung giờ bị trùng với đơn đã đặt (${conflictBooking.startTime} - ${conflictBooking.endTime}).`,
+        message: `Khung giờ bị trùng với đơn đã đặt (${conflict.startTime} - ${conflict.endTime}).`,
       });
     }
 
-    const newBooking = await booking.create({
-      customerId,
-      courtId,
-      date,
-      startTime,
-      endTime,
-      totalPrice,
+    const newBooking = await Booking.create({
+      customerId, courtId, date, startTime, endTime, totalPrice,
     });
 
     res.status(201).json({ message: 'Đặt sân thành công!', data: newBooking });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server khi tạo đơn', error: error.message });
+    next(error);
   }
 };
 
-export const getAvailableSlots = async (req, res) => {
+export const getAvailableSlots = async (req, res, next) => {
   try {
     const { courtId, date } = req.query;
 
@@ -49,7 +44,7 @@ export const getAvailableSlots = async (req, res) => {
       return res.status(400).json({ message: 'Thiếu tham số courtId hoặc date.' });
     }
 
-    const bookedList = await booking.find({
+    const bookedList = await Booking.find({
       courtId,
       date,
       status: { $ne: 'Cancelled' },
@@ -61,64 +56,38 @@ export const getAvailableSlots = async (req, res) => {
     for (let hour = 7; hour < 22; hour++) {
       const startTime = `${String(hour).padStart(2, '0')}:00`;
       const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
-
       const isBooked = bookedList.some(
         (b) => b.startTime < endTime && b.endTime > startTime
       );
-
       slots.push({ startTime, endTime, price: defaultPrice, isBooked });
     }
 
     res.status(200).json(slots);
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server khi lấy lịch trống', error: error.message });
+    next(error);
   }
 };
 
-export const getBookingHistory = async (req, res) => {
+export const getBookingById = async (req, res, next) => {
   try {
-    const { customerId, status, page = 1, limit = 10 } = req.query;
-    const filter = {};
-
-    if (customerId) filter.customerId = customerId;
-    if (status) filter.status = status;
-
-    const skip = (Number(page) - 1) * Number(limit);
-
-    const [bookings, total] = await Promise.all([
-      booking.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
-      booking.countDocuments(filter),
-    ]);
-
-    res.status(200).json({
-      data: bookings,
-      pagination: {
-        total,
-        page: Number(page),
-        totalPages: Math.ceil(total / Number(limit)),
-      },
-    });
+    const found = await Booking.findById(req.params.id);
+    if (!found) return res.status(404).json({ message: 'Không tìm thấy đơn đặt sân.' });
+    res.status(200).json(found);
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server khi lấy lịch sử', error: error.message });
+    next(error);
   }
 };
 
-export const getRevenueStats = async (req, res) => {
+export const cancelBooking = async (req, res, next) => {
   try {
-    const stats = await booking.aggregate([
-      { $match: { status: 'Confirmed' } },
-      {
-        $group: {
-          _id: '$courtId',
-          totalRevenue: { $sum: '$totalPrice' },
-          totalBookings: { $sum: 1 },
-        },
-      },
-      { $sort: { totalRevenue: -1 } },
-    ]);
-
-    res.status(200).json(stats);
+    const updated = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Cancelled' },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ message: 'Không tìm thấy đơn đặt sân.' });
+    res.status(200).json({ message: 'Đã hủy đơn.', data: updated });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server khi thống kê', error: error.message });
+    next(error);
   }
 };
