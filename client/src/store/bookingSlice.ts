@@ -1,47 +1,39 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { TimeSlot } from '../types/booking';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from './store';
+import type { CartItem } from '../types/booking';
 
 interface BookingState {
-  selectedCourtId: string;
-  selectedDate: string;
-  cartSlots: TimeSlot[];
+  items: CartItem[];
 }
 
-const initialState: BookingState = {
-  selectedCourtId: 'san_bong_A',
-  selectedDate: '2026-11-18',
-  cartSlots: [],
-};
+const initialState: BookingState = { items: [] };
+
+export function slotKey(item: Pick<CartItem, 'courtId' | 'date' | 'startTime'>): string {
+  return `${item.courtId}|${item.date}|${item.startTime}`;
+}
 
 const bookingSlice = createSlice({
   name: 'booking',
   initialState,
   reducers: {
-    setCourtId: (state, action: PayloadAction<string>) => {
-      state.selectedCourtId = action.payload;
-      state.cartSlots = [];
+    addSlot(state, action: PayloadAction<CartItem>) {
+      const exists = state.items.some((item) => slotKey(item) === slotKey(action.payload));
+      if (!exists) state.items.push(action.payload);
     },
-    setDate: (state, action: PayloadAction<string>) => {
-      state.selectedDate = action.payload;
-      state.cartSlots = [];
+    removeSlot(state, action: PayloadAction<string>) {
+      state.items = state.items.filter((item) => slotKey(item) !== action.payload);
     },
-    toggleSlot: (state, action: PayloadAction<TimeSlot>) => {
-      const exists = state.cartSlots.some(
-        (s) => s.startTime === action.payload.startTime
-      );
-      if (exists) {
-        state.cartSlots = state.cartSlots.filter(
-          (s) => s.startTime !== action.payload.startTime
-        );
-      } else {
-        state.cartSlots.push(action.payload);
-      }
-    },
-    clearCart: (state) => {
-      state.cartSlots = [];
+    clearCart(state) {
+      state.items = [];
     },
   },
 });
 
-export const { setCourtId, setDate, toggleSlot, clearCart } = bookingSlice.actions;
+export const { addSlot, removeSlot, clearCart } = bookingSlice.actions;
 export default bookingSlice.reducer;
+
+export const selectCartItems = (state: RootState): CartItem[] => state.booking.items;
+export const selectCartCount = (state: RootState): number => state.booking.items.length;
+export const selectCartTotal = (state: RootState): number =>
+  state.booking.items.reduce((sum, item) => sum + item.price, 0);
